@@ -1,0 +1,16 @@
+#inputBox {
+    background-color: rgb(66, 66, 66);
+    color: rgb(255, 255, 255);
+    font-weight: bolder;
+    border-width: 3px;
+    border-color: wheat;
+    outline: none;
+}
+
+::-webkit-input-placeholder {
+    color: whitesmoke;
+}
+p{
+    margin-top: 10px;
+    font-size: 11.5px;
+}
