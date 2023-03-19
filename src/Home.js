@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-
 import './Home.css';
 
 export default class Home extends Component {
@@ -19,12 +18,26 @@ export default class Home extends Component {
         }
     }
 
+    componentDidMount() {
+    }
+
+    removeInfoModal = () => {
+        let element = document.getElementById("info")
+        element.style.transition = "opacity " + 3 + "s ease";
+
+        element.style.opacity = 0;
+        setTimeout(() => {
+            element.remove()
+        }, 1900);
+    }
+
 
 
     getVideoId = () => {
         try {
-            
-            this.setState({ showSpinner: true, loaded:false })
+            this.removeInfoModal()
+
+            this.setState({ showSpinner: true, loaded: false })
             var url = `${this.state.videoURL}`
             let id = url.split("v=")[1].substring(0, 11)
             this.setState({ videoID: id }, () => {
@@ -54,7 +67,7 @@ export default class Home extends Component {
             const url = await fetch(`https://ytstream-download-youtube-videos.p.rapidapi.com/dl?id=${this.state.videoID}`, options)
 
             let response = await url.json()
-            this.setState({ DownloadURL: response.formats.pop().url, title: response.title, quality: response.formats.pop().qualityLabel, loaded: false, showSpinner: false, loaded: true })
+            this.setState({ DownloadURL: response.formats.pop().url, title: response.title, quality: response.formats.pop().qualityLabel, showSpinner: false, loaded: true })
         } catch {
             alert("Something went wrong from server side or the URL is invalid. Try again")
             this.setState({ showSpinner: false })
@@ -62,8 +75,17 @@ export default class Home extends Component {
     }
 
     render() {
+
         return (
             <>
+                <div className="modalContainer">
+                    <div className="infoModal" id='info' >
+                        Clicking Download will open your video in a new tab. Click three dots below the video and select download there.
+                        <i onClick={this.removeInfoModal} class="fa-solid mx-1 fa-xmark fs-3 text-danger"></i>
+
+                    </div>
+
+                </div>
                 <div className="heading text-center">
                     <h2 className='my-3'>
                         Youtube Downloader - TheDevPiyush
@@ -88,7 +110,6 @@ export default class Home extends Component {
                             (this.state.showSpinner)
                                 ?
                                 <div class="spinner-border my-5 text-light" role="status">
-                                    <span class="visually-hidden">Loaded...</span>
                                 </div>
                                 :
                                 <div className="main"></div>
@@ -100,7 +121,7 @@ export default class Home extends Component {
                             <ul class="list-group my-5 fs-5 list-group-flush border border-white border-3">
                                 <li class="list-group-item py-4 bg-dark text-white ">"{this.state.title}"</li>
                                 <li class="list-group-item py-4 bg-dark text-white ">"{this.state.quality}"</li>
-                                <a href={`${this.state.DownloadURL}`} target="_blank" class="list-group-item py-3 list-group-item-action bg-dark text-white "><i class="fas fa-download"></i> Download <p> <i>
+                                <a href={`${this.state.DownloadURL}`} target="_blank" rel="noreferrer" class="list-group-item py-3 list-group-item-action bg-dark text-white "><i class="fas fa-download"></i> Download <p> <i>
                                     This opens the video in a seperate tab. You've to select download in the video options there.</i> </p> </a>
 
                             </ul>
@@ -110,8 +131,6 @@ export default class Home extends Component {
                             <div className="hello my-5">
                             </div>
                         }
-
-
 
                     </h4>
                 </div>
